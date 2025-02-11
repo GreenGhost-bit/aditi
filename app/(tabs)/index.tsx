@@ -1,74 +1,129 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { StyleSheet, View, ScrollView, Text } from "react-native"
+import { LinearGradient } from "expo-linear-gradient"
+import { Ionicons } from "@expo/vector-icons"
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { GradientHeader } from "@/components/ui/GradientHeader"
+import { Card } from "@/components/ui/Card"
 
-export default function HomeScreen() {
+const METRICS = [
+  { title: "Active Contracts", value: "24", icon: "document-text" },
+  { title: "Total Vendors", value: "156", icon: "people" },
+  { title: "Pending Bids", value: "12", icon: "timer" },
+  { title: "This Month Spend", value: "$45.2K", icon: "wallet" },
+]
+
+export default function DashboardScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
+    <View style={styles.container}>
+      <GradientHeader title="Dashboard" subtitle="Welcome back, John" />
+
+      <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent}>
+        <View style={styles.metricsGrid}>
+          {METRICS.map((metric, index) => (
+            <Card key={index} style={styles.metricCard}>
+              <View style={styles.metricIcon}>
+                <LinearGradient
+                  colors={["#2563eb", "#3b82f6"]}
+                  style={styles.iconGradient}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                >
+                  <Ionicons name={metric.icon} size={24} color="#fff" />
+                </LinearGradient>
+              </View>
+              <Text style={styles.metricValue}>{metric.value}</Text>
+              <Text style={styles.metricTitle}>{metric.title}</Text>
+            </Card>
+          ))}
+        </View>
+
+        <Card style={styles.activityCard}>
+          <Text style={styles.sectionTitle}>Recent Activity</Text>
+          {[1, 2, 3].map((_, index) => (
+            <View key={index} style={styles.activityItem}>
+              <View style={styles.activityDot} />
+              <View style={styles.activityContent}>
+                <Text style={styles.activityTitle}>New Contract Signed</Text>
+                <Text style={styles.activityTime}>2 hours ago</Text>
+              </View>
+            </View>
+          ))}
+        </Card>
+      </ScrollView>
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: "#f8fafc",
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  content: {
+    flex: 1,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  scrollContent: {
+    padding: 16,
+    gap: 16,
   },
-});
+  metricsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12,
+  },
+  metricCard: {
+    flex: 1,
+    minWidth: "45%",
+    alignItems: "flex-start",
+    gap: 12,
+  },
+  metricIcon: {
+    borderRadius: 12,
+    overflow: "hidden",
+  },
+  iconGradient: {
+    padding: 12,
+    borderRadius: 12,
+  },
+  metricValue: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: "#0f172a",
+  },
+  metricTitle: {
+    fontSize: 14,
+    color: "#64748b",
+  },
+  activityCard: {
+    gap: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#0f172a",
+  },
+  activityItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  activityDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "#2563eb",
+  },
+  activityContent: {
+    flex: 1,
+    gap: 4,
+  },
+  activityTitle: {
+    fontSize: 16,
+    color: "#0f172a",
+  },
+  activityTime: {
+    fontSize: 14,
+    color: "#64748b",
+  },
+})
+
